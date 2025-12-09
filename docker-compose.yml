@@ -1,0 +1,112 @@
+version: '3.8'
+
+services:
+  central_db:
+    image: postgres:16
+    container_name: central_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: computer_club_rdb
+    ports:
+      - "5432:5432"
+    command:
+      - "postgres"
+      - "-c"
+      - "wal_level=logical"
+      - "-c"
+      - "max_wal_senders=10"
+      - "-c"
+      - "max_replication_slots=10"
+    volumes:
+      - central_data:/var/lib/postgresql/data
+      - ./distributed_db/central/initdb:/docker-entrypoint-initdb.d:ro
+      - ./distributed_db/central/settings:/settings
+    networks:
+      - club_net
+
+  club1_db:
+    image: postgres:16
+    container_name: club1_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: computer_club_rdb
+    ports:
+      - "5433:5432"
+    command:
+      - "postgres"
+      - "-c"
+      - "wal_level=logical"
+      - "-c"
+      - "max_wal_senders=5"
+      - "-c"
+      - "max_replication_slots=5"
+    volumes:
+      - club1_data:/var/lib/postgresql/data
+      - ./distributed_db/club_1/initdb:/docker-entrypoint-initdb.d:ro
+      - ./distributed_db/club_1/settings:/settings
+    networks:
+      - club_net
+
+  club2_db:
+    image: postgres:16
+    container_name: club2_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: computer_club_rdb
+    ports:
+      - "5434:5432"
+    command:
+      - "postgres"
+      - "-c"
+      - "wal_level=logical"
+      - "-c"
+      - "max_wal_senders=5"
+      - "-c"
+      - "max_replication_slots=5"
+    volumes:
+      - club2_data:/var/lib/postgresql/data
+      - ./distributed_db/club_2/initdb:/docker-entrypoint-initdb.d:ro
+      - ./distributed_db/club_2/settings:/settings
+    networks:
+      - club_net
+
+  club3_db:
+    image: postgres:16
+    container_name: club3_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: computer_club_rdb
+    ports:
+      - "5435:5432"
+    command:
+      - "postgres"
+      - "-c"
+      - "wal_level=logical"
+      - "-c"
+      - "max_wal_senders=5"
+      - "-c"
+      - "max_replication_slots=5"
+    volumes:
+      - club3_data:/var/lib/postgresql/data
+      - ./distributed_db/club_3/initdb:/docker-entrypoint-initdb.d:ro
+      - ./distributed_db/club_3/settings:/settings
+    networks:
+      - club_net
+
+volumes:
+  central_data:
+  club1_data:
+  club2_data:
+  club3_data:
+
+networks:
+  club_net:
+    driver: bridge
