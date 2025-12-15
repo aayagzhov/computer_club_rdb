@@ -24,13 +24,13 @@ SELECT spock.repset_add_table(
 
 -- Set conflict resolution strategy for master-master replication
 -- Using 'last_update_wins' to resolve conflicts based on commit timestamp
-DO $$
-BEGIN
-    -- Try to set conflict resolution (Spock 5.x syntax)
-    PERFORM spock.alter_table_conflict_detection(
-        'public.clients',
-        'origin_wins'
-    );
-EXCEPTION WHEN OTHERS THEN
-    RAISE NOTICE 'Conflict resolution setup skipped or using default';
-END $$;
+-- DO $$
+-- BEGIN
+--     -- Try to set conflict resolution (Spock 5.x syntax)
+--     PERFORM spock.alter_table_conflict_detection(
+--         'public.clients',
+--         'origin_wins'
+--     );
+-- EXCEPTION WHEN OTHERS THEN
+--     RAISE NOTICE 'Conflict resolution setup skipped or using default';
+-- END $$;

@@ -1,5 +1,5 @@
 CREATE
-    PUBLICATION cental_pub
+    PUBLICATION cental_club_nsi
 FOR TABLE
     clubs,
     employees,

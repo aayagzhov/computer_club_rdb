@@ -22,13 +22,13 @@ SELECT spock.repset_add_table(
     row_filter := NULL
 );
 
--- Set conflict resolution strategy for master-master replication
-DO $$
-BEGIN
-    PERFORM spock.alter_table_conflict_detection(
-        'public.clients',
-        'origin_wins'
-    );
-EXCEPTION WHEN OTHERS THEN
-    RAISE NOTICE 'Conflict resolution setup skipped or using default';
-END $$;
+-- -- Set conflict resolution strategy for master-master replication
+-- DO $$
+-- BEGIN
+--     PERFORM spock.alter_table_conflict_detection(
+--         'public.clients',
+--         'origin_wins'
+--     );
+-- EXCEPTION WHEN OTHERS THEN
+--     RAISE NOTICE 'Conflict resolution setup skipped or using default';
+-- END $$;

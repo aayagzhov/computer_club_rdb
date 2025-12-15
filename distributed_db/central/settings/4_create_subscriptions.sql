@@ -1,4 +1,14 @@
--- Subscribe central to all club nodes for master-master replication on clients table
+CREATE SUBSCRIPTION sub_from_club1
+  CONNECTION 'host=club1_db port=5432 dbname=computer_club_rdb user=admin password=password'
+  PUBLICATION clubs_consolidation;
+
+CREATE SUBSCRIPTION sub_from_club2
+  CONNECTION 'host=club2_db port=5432 dbname=computer_club_rdb user=admin password=password'
+  PUBLICATION clubs_consolidation;
+
+CREATE SUBSCRIPTION sub_from_club3
+  CONNECTION 'host=club3_db port=5432 dbname=computer_club_rdb user=admin password=password'
+  PUBLICATION clubs_consolidation;
 
 SELECT spock.sub_create(
     subscription_name := 'sub_from_club1_to_center_master_master',

@@ -3,6 +3,10 @@
 CONTAINERS="central_db club1_db club2_db club3_db"
 
 echo "============================================"
+echo " Init data bases"
+echo "============================================"
+
+echo "============================================"
 echo " STAGE 1: Creating schema and Spock nodes"
 echo "============================================"
 
@@ -11,12 +15,13 @@ for C in $CONTAINERS; do
     docker exec $C bash -c "psql -U pgedge -d postgres -f /general/1_init.sql"
     docker exec $C bash -c "psql -U admin -d computer_club_rdb -f /general/2_shema.sql"
     docker exec $C bash -c "psql -U admin -d computer_club_rdb -f /settings/1_sequences.sql"
+    docker exec $C bash -c "psql -U admin -d computer_club_rdb -f /settings/2_publications.sql"
     docker exec $C bash -c "psql -U admin -d computer_club_rdb -f /settings/3_create_spok_node.sql"
 done
 
 echo ""
-echo "=== Waiting for all nodes to be ready (5 seconds) ==="
-sleep 5
+echo "=== Waiting for all nodes to be ready (10 seconds) ==="
+sleep 10
 
 echo ""
 echo "============================================"
