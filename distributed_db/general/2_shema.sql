@@ -135,3 +135,6 @@ CREATE TABLE IF NOT EXISTS clients(
   registration_timestamp timestamp without time zone NOT NULL
 );
 COMMENT ON COLUMN clients.password_hash IS 'bcrypt base64';
+
+-- Required for master-master replication with Spock
+ALTER TABLE clients REPLICA IDENTITY FULL;
