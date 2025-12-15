@@ -1,5 +1,5 @@
 CREATE EXTENSION IF NOT EXISTS btree_gist;
-CREATE EXTENSION spock;
+CREATE EXTENSION IF NOT EXISTS spock;
 
 CREATE TABLE IF NOT EXISTS tariffs(
   id smallserial PRIMARY KEY,
@@ -128,7 +128,10 @@ CREATE TABLE IF NOT EXISTS maintenance_requests(
   last_modified timestamp without time zone NOT NULL DEFAULT now()
 );
 
-CREATE TABLE IF NOT EXISTS clients(
+-- Drop and recreate clients table to ensure PRIMARY KEY exists
+-- (IF NOT EXISTS won't update existing table without PK)
+DROP TABLE IF EXISTS clients CASCADE;
+CREATE TABLE clients(
   phone_number char(11) PRIMARY KEY,
   discount_status smallint NOT NULL,
   password_hash char(60) NOT NULL,
