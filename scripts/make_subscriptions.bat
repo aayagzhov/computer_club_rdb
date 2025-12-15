@@ -1,5 +1,5 @@
 @echo off
-set CONTAINERS=central_db club1_db club2_db club3_db
+set CONTAINERS=club1_db
 
 for %%C in (%CONTAINERS%) do (
     echo === Updating %%C ===

@@ -129,9 +129,7 @@ CREATE TABLE IF NOT EXISTS maintenance_requests(
 );
 
 -- Drop and recreate clients table to ensure PRIMARY KEY exists
--- (IF NOT EXISTS won't update existing table without PK)
-DROP TABLE IF EXISTS clients CASCADE;
-CREATE TABLE clients(
+CREATE TABLE IF NOT EXISTS clients(
   phone_number char(11) PRIMARY KEY,
   discount_status smallint NOT NULL,
   password_hash char(60) NOT NULL,
@@ -140,4 +138,4 @@ CREATE TABLE clients(
 COMMENT ON COLUMN clients.password_hash IS 'bcrypt base64';
 
 -- Required for master-master replication with Spock
-ALTER TABLE clients REPLICA IDENTITY FULL;
+--ALTER TABLE clients REPLICA IDENTITY FULL;
