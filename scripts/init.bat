@@ -9,6 +9,8 @@ for %%C in (%CONTAINERS%) do (
     echo === Setting up %%C ===
     docker exec %%C bash -c "psql -U pgedge -d postgres -f /general/1_init.sql"
     docker exec %%C bash -c "psql -U admin -d computer_club_rdb -f /general/2_shema.sql"
+    @REM TODO: когда будет настроена РОК 1/день делать скрипт только на central_db
+    docker exec %%C bash -c "psql -U admin -d computer_club_rdb -f /general/3_seed_statuses.sql"
     docker exec %%C bash -c "psql -U admin -d computer_club_rdb -f /settings/1_sequences.sql"
     docker exec %%C bash -c "psql -U admin -d computer_club_rdb -f /settings/3_create_spok_node.sql"
 )

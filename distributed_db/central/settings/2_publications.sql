@@ -9,4 +9,5 @@ FOR TABLE
     maintenance_request_status,
     booking_statuses,
     discount_statuses,
-    job_titles;
+    job_titles,
+    maintenance_requests;

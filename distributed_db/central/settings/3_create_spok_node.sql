@@ -23,14 +23,18 @@ SELECT spock.repset_add_table(
 );
 
 -- Set conflict resolution strategy for master-master replication
--- Using 'last_update_wins' to resolve conflicts based on commit timestamp
+-- Using 'last_update_wins' to resolve conflicts based on last_modified timestamp
 DO $$
 BEGIN
     -- Try to set conflict resolution (Spock 5.x syntax)
+    -- last_update_wins использует поле last_modified для разрешения конфликтов
     PERFORM spock.alter_table_conflict_detection(
         'public.clients',
-        'origin_wins'
+        'last_update_wins'
     );
 EXCEPTION WHEN OTHERS THEN
     RAISE NOTICE 'Conflict resolution setup skipped or using default';
 END $$;
+
+-- Установка session variable для идентификации узла (центральный офис = 0)
+ALTER DATABASE computer_club_rdb SET app.current_club_id = '0';
