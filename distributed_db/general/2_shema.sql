@@ -120,6 +120,7 @@ CREATE TABLE IF NOT EXISTS maintenance_requests(
   id integer PRIMARY KEY,
   creation_timestamp timestamp without time zone NOT NULL,
   gaming_seat_id integer NULL,
+  club_id smallint NOT NULL,
   status smallint NOT NULL,
   description text NOT NULL,
   executor_id integer NULL,
@@ -139,3 +140,29 @@ COMMENT ON COLUMN clients.password_hash IS 'bcrypt base64';
 
 -- Required for master-master replication with Spock
 --ALTER TABLE clients REPLICA IDENTITY FULL;
+ALTER TABLE maintenance_requests REPLICA IDENTITY FULL;
+
+-- Trigger function to block club edits when status is 'Создана' (1)
+CREATE OR REPLACE FUNCTION check_maintenance_request_edit()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Allow all operations in central_db (assuming it has a specific identifier)
+    -- We check if the current database is NOT a club database by checking if it contains 'central'
+    IF current_database() LIKE '%central%' THEN
+        RETURN NEW;
+    END IF;
+    
+    -- Block UPDATE in club databases when status is 'Создана' (1)
+    IF TG_OP = 'UPDATE' AND OLD.status = 1 THEN
+        RAISE EXCEPTION 'Невозможно редактировать заявку со статусом "Создана". Заявка находится на рассмотрении в центральном офисе.';
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create trigger for maintenance_requests
+CREATE TRIGGER maintenance_request_edit_check
+    BEFORE UPDATE ON maintenance_requests
+    FOR EACH ROW
+    EXECUTE FUNCTION check_maintenance_request_edit();

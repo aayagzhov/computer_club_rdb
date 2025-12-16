@@ -7,7 +7,7 @@ WITH (copy_data = true, create_slot = true);
 SELECT spock.sub_create(
     subscription_name := 'sub_from_central_to_club2_master_master',
     provider_dsn := 'host=central_db port=5432 user=admin password=password dbname=computer_club_rdb',
-    replication_sets := ARRAY['central_master_master'],
+    replication_sets := ARRAY['central_master_master', 'central_maintenance_club2'],
     synchronize_structure := false,
     synchronize_data := false,
     forward_origins := ARRAY[]::text[]

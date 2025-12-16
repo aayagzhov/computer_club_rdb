@@ -22,6 +22,56 @@ SELECT spock.repset_add_table(
     row_filter := NULL
 );
 
+-- Create separate replication sets for maintenance_requests per club
+SELECT spock.repset_create(
+    set_name := 'central_maintenance_club1',
+    replicate_insert := true,
+    replicate_update := true,
+    replicate_delete := true,
+    replicate_truncate := true
+);
+
+SELECT spock.repset_create(
+    set_name := 'central_maintenance_club2',
+    replicate_insert := true,
+    replicate_update := true,
+    replicate_delete := true,
+    replicate_truncate := true
+);
+
+SELECT spock.repset_create(
+    set_name := 'central_maintenance_club3',
+    replicate_insert := true,
+    replicate_update := true,
+    replicate_delete := true,
+    replicate_truncate := true
+);
+
+-- Add maintenance_requests with row filters for each club
+SELECT spock.repset_add_table(
+    set_name := 'central_maintenance_club1',
+    relation := 'public.maintenance_requests',
+    synchronize_data := false,
+    columns := NULL,
+    row_filter := 'club_id = 1'
+);
+
+SELECT spock.repset_add_table(
+    set_name := 'central_maintenance_club2',
+    relation := 'public.maintenance_requests',
+    synchronize_data := false,
+    columns := NULL,
+    row_filter := 'club_id = 2'
+);
+
+SELECT spock.repset_add_table(
+    set_name := 'central_maintenance_club3',
+    relation := 'public.maintenance_requests',
+    synchronize_data := false,
+    columns := NULL,
+    row_filter := 'club_id = 3'
+);
+
 -- Set conflict resolution strategy for master-master replication
 -- Using 'last_update_wins' to resolve conflicts based on commit timestamp
 -- DO $$
