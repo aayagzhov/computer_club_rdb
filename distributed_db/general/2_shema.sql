@@ -145,10 +145,16 @@ ALTER TABLE maintenance_requests REPLICA IDENTITY FULL;
 -- Trigger function to block club edits when status is 'Создана' (1)
 CREATE OR REPLACE FUNCTION check_maintenance_request_edit()
 RETURNS TRIGGER AS $$
+DECLARE
+    node_name TEXT;
 BEGIN
-    -- Allow all operations in central_db (assuming it has a specific identifier)
-    -- We check if the current database is NOT a club database by checking if it contains 'central'
-    IF current_database() LIKE '%central%' THEN
+    -- Get current Spock node name
+    SELECT name INTO node_name
+    FROM spock.node
+    LIMIT 1;
+    
+    -- Allow all operations in central node
+    IF node_name = 'central' THEN
         RETURN NEW;
     END IF;
     
