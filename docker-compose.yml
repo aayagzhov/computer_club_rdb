@@ -30,6 +30,7 @@ services:
       - club1_data:/data/pgdata
       - ./distributed_db/general/:/general
       - ./distributed_db/club_1/settings:/settings
+      - ./distributed_db/club_1/seed:/seed
       - ./tests:/tests
     networks:
       - club_net
@@ -46,6 +47,7 @@ services:
       - club2_data:/data/pgdata
       - ./distributed_db/general/:/general
       - ./distributed_db/club_2/settings:/settings
+      - ./distributed_db/club_2/seed:/seed
       - ./tests:/tests
     networks:
       - club_net
@@ -62,6 +64,7 @@ services:
       - club3_data:/data/pgdata
       - ./distributed_db/general/:/general
       - ./distributed_db/club_3/settings:/settings
+      - ./distributed_db/club_3/seed:/seed
       - ./tests:/tests
     networks:
       - club_net
