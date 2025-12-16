@@ -14,12 +14,12 @@ for C in $CONTAINERS; do
     echo "=== Setting up $C ==="
     docker exec $C bash -c "psql -U pgedge -d postgres -f /general/1_init.sql"
     docker exec $C bash -c "psql -U admin -d computer_club_rdb -f /general/2_shema.sql"
+    docker exec $C bash -c "psql -U admin -d computer_club_rdb -f /general/3_initial_data.sql"
+    docker exec $C bash -c "psql -U admin -d computer_club_rdb -f /general/4_triggers.sql"
     docker exec $C bash -c "psql -U admin -d computer_club_rdb -f /settings/1_sequences.sql"
     docker exec $C bash -c "psql -U admin -d computer_club_rdb -f /settings/2_publications.sql"
     docker exec $C bash -c "psql -U admin -d computer_club_rdb -f /settings/3_create_spok_node.sql"
 done
-
-docker exec central_db bash -C "psql -U admin  -d computer_club_rdb -f /general/3_initial_data.sql"
 
 echo ""
 echo "=== Waiting for all nodes to be ready (10 seconds) ==="

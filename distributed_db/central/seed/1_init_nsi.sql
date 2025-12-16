@@ -11,7 +11,7 @@ INSERT INTO gaming_seat_statuses (id, status) VALUES
     (1, 'Доступно'),
     (2, 'Занято'),
     (3, 'На обслуживании'),
-    (4, 'Неисправно')
+    (4, 'Выведен из эксплуатации')
 ON CONFLICT (id) DO UPDATE SET status = EXCLUDED.status;
 
 -- Статусы бронирований

@@ -137,38 +137,3 @@ CREATE TABLE IF NOT EXISTS clients(
   registration_timestamp timestamp without time zone NOT NULL
 );
 COMMENT ON COLUMN clients.password_hash IS 'bcrypt base64';
-
--- Required for master-master replication with Spock
---ALTER TABLE clients REPLICA IDENTITY FULL;
--- ALTER TABLE maintenance_requests REPLICA IDENTITY FULL;
-
--- Trigger function to block club edits when status is 'Создана' (1)
-CREATE OR REPLACE FUNCTION check_maintenance_request_edit()
-RETURNS TRIGGER AS $$
-DECLARE
-    name TEXT;
-BEGIN
-    -- Get current Spock node name
-    SELECT node_name INTO name
-    FROM spock.node
-    LIMIT 1;
-    
-    -- Allow all operations in central node
-    IF name = 'central' THEN
-        RETURN NEW;
-    END IF;
-    
-    -- Block UPDATE in club databases when status is 'Создана' (1)
-    IF TG_OP = 'UPDATE' AND OLD.status = 1 THEN
-        RAISE EXCEPTION 'Невозможно редактировать заявку со статусом "Создана". Заявка находится на рассмотрении в центральном офисе.';
-    END IF;
-    
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
--- Create trigger for maintenance_requests
-CREATE TRIGGER maintenance_request_edit_check
-    BEFORE UPDATE ON maintenance_requests
-    FOR EACH ROW
-    EXECUTE FUNCTION check_maintenance_request_edit();
