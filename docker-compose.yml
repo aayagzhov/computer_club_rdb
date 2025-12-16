@@ -13,6 +13,7 @@ services:
       - central_data:/data/pgdata
       - ./distributed_db/general/:/general
       - ./distributed_db/central/settings:/settings
+      - ./distributed_db/central/seed:/seed
     networks:
       - club_net
 
